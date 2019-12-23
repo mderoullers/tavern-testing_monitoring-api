@@ -1,0 +1,64 @@
+---
+test_name: Check that the owner service is secure
+
+stages:
+  - name: check that you can not connect without the user/password
+
+    request:
+      url: "{petclinic.url}/owners"
+      method: GET
+      verify: false
+
+    response:
+      status_code:
+        - 401
+
+  - name: check that you can connect with the user/password
+
+    request:
+      url: "{petclinic.url}/owners"
+      method: GET
+      verify: false
+      auth:
+        - "{petclinic.user}"
+        - "{petclinic.pwd}"
+
+    response:
+      status_code:
+        - 200
+
+# ---
+# test_name: Check that the owner service is up
+
+# stages:
+#   - name: add a new owner
+
+#     request: &send_request_to_api_owner
+#       url: "{petclinic.url}/api/owners"
+#       method: POST
+#       verify: false
+#       auth:
+#         - "{petclinic.user}"
+#         - "{petclinic.pwd}"
+#       json:
+#         id: 0
+#         firstName: Maxime
+#         lastName: Deroullers
+#         address: 2 rue du test
+#         city: Lille
+#         pets:
+#         - id: 0
+#           name: Max
+#           birthDate: '1992/11/14'
+#           owner: {}
+#           type:
+#             id: 2
+#             name: dog
+#           visits:
+#           - id: 0
+#             date: 2019/11/14
+#             description: vaccin
+
+#     response:
+#       status_code:
+#         - 201

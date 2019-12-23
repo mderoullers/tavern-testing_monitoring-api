@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?><testsuite errors="0" failures="1" name="petclinic_test_suite" skipped="0" tests="3" time="0.489"><testcase classname="test_owner_service.tavern.yml" file="test_owner_service.tavern.yml" line="0" name="Check that the owner service is secure" time="0.305"></testcase><testcase classname="test_pet_service.tavern.yml" file="test_pet_service.tavern.yml" line="0" name="Check that the pet service is secure" time="0.033"><failure message="Format variables:
+  petclinic.url = &apos;http://localhost:9966/petclinic/api&apos;
+  petclinic.user = &apos;admin&apos;
+  petclinic.pwd = &apos;admin&apos;
+
+Source test stage (line 15):
+  - name: check that you can connect with the user/password
+
+    request:
+      url: &quot;{petclinic.url}/pets&quot;
+      method: GET
+      verify: false
+      auth:
+        - &quot;{petclinic.user}&quot;
+        - &quot;{petclinic.pwd}&quot;
+
+    response:
+      status_code:
+        - 201
+
+
+
+
+Formatted stage:
+  name: check that you can connect with the user/password
+  request:
+    auth:
+    - &apos;admin&apos;
+    - &apos;admin&apos;
+    method: GET
+    url: &apos;http://localhost:9966/petclinic/api/pets&apos;
+    verify: false
+  response:
+    status_code:
+    - 201
+
+Errors:
+E   tavern.util.exceptions.TestFailError: Test &apos;check that you can connect with the user/password&apos; failed:
+    - Status code was 200, expected [201]">Format variables:
+  petclinic.url = &apos;http://localhost:9966/petclinic/api&apos;
+  petclinic.user = &apos;admin&apos;
+  petclinic.pwd = &apos;admin&apos;
+
+Source test stage (line 15):
+  - name: check that you can connect with the user/password
+
+    request:
+      url: &quot;{petclinic.url}/pets&quot;
+      method: GET
+      verify: false
+      auth:
+        - &quot;{petclinic.user}&quot;
+        - &quot;{petclinic.pwd}&quot;
+
+    response:
+      status_code:
+        - 201
+
+
+
+
+Formatted stage:
+  name: check that you can connect with the user/password
+  request:
+    auth:
+    - &apos;admin&apos;
+    - &apos;admin&apos;
+    method: GET
+    url: &apos;http://localhost:9966/petclinic/api/pets&apos;
+    verify: false
+  response:
+    status_code:
+    - 201
+
+Errors:
+E   tavern.util.exceptions.TestFailError: Test &apos;check that you can connect with the user/password&apos; failed:
+    - Status code was 200, expected [201]</failure></testcase><testcase classname="test_pet_service.tavern.yml" file="test_pet_service.tavern.yml" line="0" name="Check that the pet service is up" time="0.086"></testcase></testsuite>

@@ -1,0 +1,121 @@
+---
+test_name: 'Check search engine redirection service is up'
+
+stages:
+  - name: get the list of redirections
+
+    request:
+      url: "{ecatalog.url}/v1/redirections/search"
+      method: GET
+      verify: false
+      auth:
+        - "{ecatalog.user}"
+        - "{ecatalog.pwd}"
+
+    response:
+      status_code:
+        - 200
+        - 206
+      save:
+        headers:
+          redirections_number: X-Total-Count
+
+
+  - name: add a new redirection to the search engine
+
+    request:
+      url: "{ecatalog.url}/v1/redirections"
+      method: POST
+      headers:
+        content-type: application/json
+      verify: false
+      auth:
+        - "{ecatalog.user}"
+        - "{ecatalog.pwd}"
+      json: !include data/ecatalog/search_redirect.json
+
+    response:
+      status_code: 201
+      save:
+        body:
+          new_redirect_id: id
+
+
+  - name: check that the redirection to the search engine has been created
+
+    request:
+      url: "{ecatalog.url}/v1/redirections/{new_redirect_id}"
+      method: GET
+      verify: false
+      auth:
+        - "{ecatalog.user}"
+        - "{ecatalog.pwd}"
+
+    response:
+      status_code: 200
+      body:
+        id: !int "{new_redirect_id}"
+
+
+  - name: check that there is a new redirection in the list
+
+    request:
+      url: "{ecatalog.url}/v1/redirections/search"
+      method: GET
+      verify: false
+      auth:
+        - "{ecatalog.user}"
+        - "{ecatalog.pwd}"
+
+    response:
+      status_code:
+        - 200
+        - 206
+      headers:
+        $ext:
+          function: tavern.testutils.helpers:validate_content
+          extra_kwargs:
+            comparisons:
+              - jmespath: "X-Total-Count"
+                operator: "gt"
+                expected: !int "{redirections_number}"
+
+
+  - name: update the redirection
+
+    request:
+      url: "{ecatalog.url}/v1/redirections"
+      method: PUT
+      verify: false
+      auth:
+        - "{ecatalog.user}"
+        - "{ecatalog.pwd}"
+      json:
+        id: !int "{new_redirect_id}"
+        createdBy: mderoullers
+        name: "/test.html"
+        targetUrl: "/result.html"
+        patterns:
+          - createdBy: mderoullers
+            name: test
+          - createdBy: mderoullers
+            name: test 2
+
+    response:
+      status_code: 205
+
+
+  - name: delete the new redirection
+
+    request:
+      url: "{ecatalog.url}/v1/redirections/{new_redirect_id}"
+      method: DELETE
+      headers:
+        content-type: application/json
+      verify: false
+      auth:
+        - "{ecatalog.user}"
+        - "{ecatalog.pwd}"
+
+    response:
+      status_code: 204

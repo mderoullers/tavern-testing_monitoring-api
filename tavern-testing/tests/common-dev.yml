@@ -1,0 +1,11 @@
+---
+name: Common variables for tests
+description:
+  This file contains the common variables for tests (such as URLs, authentications, etc.).
+
+variables:
+  env: dev
+  petclinic:
+    url: http://localhost:9966/petclinic/api
+    user: admin
+    pwd: admin

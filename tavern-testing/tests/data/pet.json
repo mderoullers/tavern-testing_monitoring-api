@@ -1,0 +1,18 @@
+{
+    "id": 1,
+    "name": "Jacky",
+    "birthDate": "2011/01/01",
+    "type": {
+        "id": 1,
+        "name": "cat"
+    },
+    "owner": {
+        "id": 1,
+        "firstName": "George",
+        "lastName": "Franklin",
+        "address": "110 W. Liberty St.",
+        "city": "Madison",
+        "telephone": "6085551023"
+    },
+    "visits": []
+}

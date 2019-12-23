@@ -1,0 +1,123 @@
+---
+test_name: Check that the pet service is secure
+
+stages:
+  - name: check that you can not connect without the user/password
+
+    request:
+      url: "{petclinic.url}/pets"
+      method: GET
+      verify: false
+
+    response:
+      status_code:
+        - 401
+
+  - name: check that you can connect with the user/password
+
+    request:
+      url: "{petclinic.url}/pets"
+      method: GET
+      verify: false
+      auth:
+        - "{petclinic.user}"
+        - "{petclinic.pwd}"
+
+    response:
+      status_code:
+        - 201
+
+
+
+---
+test_name: Check that the pet service is up
+
+stages:
+  - name: get the pet types
+
+    request:
+      url: "{petclinic.url}/pets/pettypes"
+      method: GET
+      verify: false
+      auth:
+        - "{petclinic.user}"
+        - "{petclinic.pwd}"
+
+    response:
+      status_code:
+        - 200
+      body:
+        $ext:
+          function: tavern.testutils.helpers:validate_content
+          extra_kwargs:
+            comparisons:
+              - jmespath: "[0].id"
+                operator: "type"
+                expected: int
+              - jmespath: "[0].name"
+                operator: "type"
+                expected: str
+
+
+  - name: add a new pet
+
+    request:
+      url: "{petclinic.url}/pets"
+      method: POST
+      verify: false
+      auth:
+        - "{petclinic.user}"
+        - "{petclinic.pwd}"
+      json: !include data/pet.json
+
+    response:
+      status_code:
+        - 201
+
+
+  - name: list the pets and get the id of new pet
+
+    request:
+      url: "{petclinic.url}/pets"
+      method: GET
+      verify: false
+      auth:
+        - "{petclinic.user}"
+        - "{petclinic.pwd}"
+
+    response:
+      status_code:
+        - 200
+      save:
+        body:
+          id_new_pet: "[?name == 'Jacky'] | [-1].id"
+
+
+  - name: get the new pet
+
+    request:
+      url: "{petclinic.url}/pets/{id_new_pet}"
+      method: GET
+      verify: false
+      auth:
+        - "{petclinic.user}"
+        - "{petclinic.pwd}"
+
+    response:
+      status_code:
+        - 200
+
+
+  - name: delete the new pet
+
+    request:
+      url: "{petclinic.url}/pets/{id_new_pet}"
+      method: DELETE
+      verify: false
+      auth:
+        - "{petclinic.user}"
+        - "{petclinic.pwd}"
+
+    response:
+      status_code:
+        - 204
